@@ -6,18 +6,20 @@ import (
 	"errors"
 	"fmt"
 	"github.com/codecrafters-io/git-starter-go/internal/models"
-	"github.com/codecrafters-io/git-starter-go/internal/utils"
 	"io"
-	"log"
 	"os"
 	"strconv"
 )
 
-func CatFile(fileSha string, flag string) error {
-	pathToObject, err := utils.GetObjectPathFromFileSha(fileSha)
+type fileUtils interface {
+	GetObjectPathFromFileSha(fileSha string) (string, error)
+}
+
+func CatFile(fileSha string, flag string, u fileUtils) error {
+	pathToObject, err := u.GetObjectPathFromFileSha(fileSha)
 
 	if err != nil {
-		log.Fatalf("Error: %s\n", err)
+		return errors.New(fmt.Sprintf("Error: %s\n", err))
 	}
 
 	file, err := os.Open(pathToObject)

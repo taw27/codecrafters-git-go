@@ -6,10 +6,17 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"os"
 )
 
-func GetObjectPathFromFileSha(fileSha string) (string, error) {
+type Utils interface {
+	GetObjectPathFromFileSha(fileSha string) (string, error)
+	GetHashFromFile(reader io.Reader) (string, error)
+}
+
+type AppUtils struct {
+}
+
+func (a AppUtils) GetObjectPathFromFileSha(fileSha string) (string, error) {
 	if len(fileSha) != 40 {
 		return "", errors.New("file sha is invalid. Needs to be 40 char")
 	}
@@ -23,10 +30,10 @@ func GetObjectPathFromFileSha(fileSha string) (string, error) {
 	return objectPath, nil
 }
 
-func GetHashFromFile(file *os.File) (string, error) {
+func (a AppUtils) GetHashFromFile(reader io.Reader) (string, error) {
 	hash := sha1.New()
 
-	if _, err := io.Copy(hash, file); err != nil {
+	if _, err := io.Copy(hash, reader); err != nil {
 		return "", err
 	}
 
