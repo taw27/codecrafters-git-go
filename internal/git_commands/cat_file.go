@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/codecrafters-io/git-starter-go/internal/models"
+	"github.com/codecrafters-io/git-starter-go/internal/utils"
 	"io"
 	"log"
 	"os"
@@ -13,7 +14,7 @@ import (
 )
 
 func CatFile(fileSha string, flag string) error {
-	pathToObject, err := getObjectPathFromFileSha(fileSha)
+	pathToObject, err := utils.GetObjectPathFromFileSha(fileSha)
 
 	if err != nil {
 		log.Fatalf("Error: %s\n", err)
@@ -72,18 +73,4 @@ func CatFile(fileSha string, flag string) error {
 	}
 
 	return gitObject.RunCommand(flag)
-}
-
-func getObjectPathFromFileSha(fileSha string) (string, error) {
-	if len(fileSha) != 40 {
-		return "", errors.New("file sha is invalid. Needs to be 40 char")
-	}
-
-	baseDir := ".git/objects/"
-	shaFirstTwoChars := fileSha[0:2]
-	fileName := fileSha[2:]
-
-	objectPath := fmt.Sprintf("%s%s/%s", baseDir, shaFirstTwoChars, fileName)
-
-	return objectPath, nil
 }
