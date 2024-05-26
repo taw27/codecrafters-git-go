@@ -11,11 +11,11 @@ import (
 	"strconv"
 )
 
-type fileUtils interface {
+type catFileUtils interface {
 	GetObjectPathFromFileSha(fileSha string) (string, error)
 }
 
-func CatFile(fileSha string, flag string, u fileUtils) error {
+func CatFile(fileSha string, flag string, u catFileUtils) error {
 	pathToObject, err := u.GetObjectPathFromFileSha(fileSha)
 
 	if err != nil {
@@ -74,5 +74,11 @@ func CatFile(fileSha string, flag string, u fileUtils) error {
 		Content: content,
 	}
 
-	return gitObject.RunCommand(flag)
+	if flag != "-p" {
+		return errors.New(fmt.Sprintf("Error: command '%s' not recognized", flag))
+	}
+
+	gitObject.PrettyPrintContent()
+
+	return nil
 }

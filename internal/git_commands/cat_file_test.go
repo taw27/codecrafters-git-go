@@ -81,7 +81,7 @@ func TestCatFile_HappyPath_ContentOutput(t *testing.T) {
 }
 
 func TestCatFile_FileOpenError(t *testing.T) {
-	err := CatFile(dummyTestFileName, "p", utils.AppUtils{})
+	err := CatFile(dummyTestFileName, "p", &utils.AppUtils{})
 
 	if err == nil {
 		t.Error("Expected error, got nil")

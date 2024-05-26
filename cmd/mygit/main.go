@@ -10,7 +10,9 @@ import (
 
 // Usage: your_git.sh <command> <arg1> <arg2> ...
 func main() {
-	if len(os.Args) < 2 {
+	argLength := len(os.Args)
+
+	if argLength < 2 {
 		log.Fatalf("usage: mygit <command> [<args>...]\n")
 	}
 
@@ -29,13 +31,30 @@ func main() {
 
 		fmt.Println("Initialized git directory")
 	case "cat-file":
-		if len(os.Args) < 4 {
-			log.Fatalf("usage: cat-file -p <blob_sha>")
+		if argLength != 4 {
+			log.Fatalf("usage: cat-file [-p] <blob_sha>")
 		}
 
-		err := git_commands.CatFile(os.Args[3], os.Args[2], utils.AppUtils{})
+		err := git_commands.CatFile(os.Args[3], os.Args[2], &utils.AppUtils{})
 
 		if err != nil {
+			log.Fatal(err)
+		}
+	case "hash-object":
+		if argLength < 3 && argLength > 4 {
+			log.Fatalf("usage: hash-object [-w] <file>")
+		}
+
+		var filePath, flag string
+
+		if argLength == 4 {
+			flag = os.Args[2]
+			filePath = os.Args[3]
+		} else {
+			filePath = os.Args[2]
+		}
+
+		if err := git_commands.HashObject(filePath, flag, &utils.AppUtils{}); err != nil {
 			log.Fatal(err)
 		}
 	default:

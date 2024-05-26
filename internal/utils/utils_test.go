@@ -14,7 +14,9 @@ func TestGetHashFromFile_HappyPath(t *testing.T) {
 
 	defer os.Remove(file.Name())
 
-	hash, err := AppUtils{}.GetHashFromFile(file)
+	utils := AppUtils{}
+
+	hash, err := utils.GetShaFromFile(file)
 
 	if err != nil {
 		t.Errorf("Expected no error, got %v", err)
@@ -27,7 +29,8 @@ func TestGetHashFromFile_HappyPath(t *testing.T) {
 func TestGetHashFromFile_FileReadError(t *testing.T) {
 	file, _ := os.Open("doesnotexist")
 
-	_, err := AppUtils{}.GetHashFromFile(file)
+	utils := AppUtils{}
+	_, err := utils.GetShaFromFile(file)
 
 	if err == nil {
 		t.Errorf("Expected error, got nil")
@@ -37,7 +40,8 @@ func TestGetHashFromFile_FileReadError(t *testing.T) {
 func TestGetObjectPathFromFileSha_HappyPath(t *testing.T) {
 	fileSha := "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3"
 
-	path, _ := AppUtils{}.GetObjectPathFromFileSha(fileSha)
+	utils := AppUtils{}
+	path, _ := utils.GetObjectPathFromFileSha(fileSha)
 
 	expectedPath := ".git/objects/a9/4a8fe5ccb19ba61c4c0873d391e987982fbbd3"
 
@@ -49,7 +53,8 @@ func TestGetObjectPathFromFileSha_HappyPath(t *testing.T) {
 func TestGetObjectPathFromFileSha_InvalidSha(t *testing.T) {
 	fileSha := "invalid"
 
-	_, err := AppUtils{}.GetObjectPathFromFileSha(fileSha)
+	utils := AppUtils{}
+	_, err := utils.GetObjectPathFromFileSha(fileSha)
 
 	if err == nil {
 		t.Error("Expected error, got nil")
